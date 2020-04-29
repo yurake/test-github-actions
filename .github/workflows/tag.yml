@@ -1,0 +1,14 @@
+name: Tag Actions
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  job_id:
+    runs-on: ubuntu-latest
+    steps:
+    - name: set env
+      run: |
+        echo ::set-env name=GIT_TAG_VER::"${{ github.event.release.tag_name }}"
+        echo ::set-env name=MVN_BLD_VER::"${{ github.event.release.tag_name }}　| cut -c 2-"
