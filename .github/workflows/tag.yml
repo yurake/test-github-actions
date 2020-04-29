@@ -10,5 +10,7 @@ jobs:
     steps:
     - name: set env
       run: |
-        echo ::set-env name=GIT_TAG_VER::"${{ github.event.release.tag_name }}"
-        echo ::set-env name=MVN_BLD_VER::"${{ github.event.release.tag_name }}　| cut -c 2-"
+        export TAG_NAME="${{ github.event.release.tag_name }}"
+        export TAG_NAME_NOTV=echo ${TAG_NAME} | cut -c 2-
+        echo ::set-env name=GIT_TAG_VER::"${TAG_NAME}"
+        echo ::set-env name=MVN_BLD_VER::"${TAG_NAME_NOTV}"
