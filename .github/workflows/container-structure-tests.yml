@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      
+    - name: Docker pull
+      run: |
+        docker pull bitnami/kafka:2-debian-10
     
     - name: Container Structure Test Action
       uses: plexsystems/container-structure-test-action@v0.2.0
