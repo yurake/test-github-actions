@@ -14,5 +14,5 @@ jobs:
     - name: Container Structure Test Action
       uses: plexsystems/container-structure-test-action@v0.2.0
       with:
-        image: my-image:latest
+        image: bitnami/kafka:2-debian-10
         config: debian_test.yaml
