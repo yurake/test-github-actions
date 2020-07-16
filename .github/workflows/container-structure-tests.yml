@@ -1,0 +1,18 @@
+name: Container Structure Tests
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Container Structure Test Action
+      uses: plexsystems/container-structure-test-action@v0.2.0
+      with:
+        image: my-image:latest
+        config: debian_test.yaml
