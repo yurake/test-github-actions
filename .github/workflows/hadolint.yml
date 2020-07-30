@@ -7,4 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.0.0
-      - uses: brpaz/hadolint-action@v1.0.0
+      - name: lint mysql
+        uses: brpaz/hadolint-action@v1.0.0
+        with:
+          dockerfile: mysql/Dockerfile
+      - name: lint rabbitmq
+        uses: brpaz/hadolint-action@v1.0.0
+        with:
+          dockerfile: rabbitmq/Dockerfile
+      - name: lint jenkins
+        uses: brpaz/hadolint-action@v1.0.0
+        with:
+          dockerfile: jenkins/Dockerfile

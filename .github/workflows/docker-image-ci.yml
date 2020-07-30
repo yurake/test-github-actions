@@ -1,0 +1,39 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: setup docker actions
+        env:
+          TZ: "Asia/Tokyo"
+        run: |
+          echo ::set-env name=BUILD_DATE::$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo ::set-env name=VCS_REF::$(echo ${GITHUB_SHA} | cut -c1-8)
+
+      - name: Build image - mysql
+        working-directory: ./mysql
+        run: docker build -t yurak/mysql:latest
+          --build-arg VCS_REF=${VCS_REF}
+          --build-arg BUILD_DATE=${BUILD_DATE} .
+
+      - name: Build image - rabbitmq
+        working-directory: ./rabbitmq
+        run: docker build -t yurak/rabbitmq:latest
+          --build-arg VCS_REF=${VCS_REF}
+          --build-arg BUILD_DATE=${BUILD_DATE} .
+
+      - name: Build image - jenkins
+        working-directory: ./jenkins
+        run: docker build -t yurak/jenkins:latest
+          --build-arg VCS_REF=${VCS_REF}
+          --build-arg BUILD_DATE=${BUILD_DATE} .
