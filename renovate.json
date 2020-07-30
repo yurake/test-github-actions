@@ -11,7 +11,7 @@
         "pin",
         "digest"
       ],
-      "automerge": true
+      "automerge": false
     },
     {
       "packageNames": [
@@ -35,13 +35,6 @@
       "groupName": "alpine packages",
       "groupSlug": "alpine"
     }
-  ],
-  "assignees": [
-    "yurak"
-  ],
-  "timezone": "Asia/Tokyo",
-  "labels": [
-    "renovate"
   ],
   "regexManagers": [
     {
