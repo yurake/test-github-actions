@@ -6,7 +6,7 @@ ENV TZDATA_VERSION="2020a-r0"
 # renovate: datasource=repology depName=alpine_3_12/gcc
 ENV GCC_VERSION="9.3.0-r4"
 # renovate: datasource=repology depName=alpine_3_12/docker
-ENV DOCKER_VERSION="19.03.11-r0"
+ENV DOCKER_VERSION="19.03.12-r0"
 LABEL org.label-schema.build-date=$BUILD_DATE org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/yurake/k8s-3tier-webapp"
 USER root
