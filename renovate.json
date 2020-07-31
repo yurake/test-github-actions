@@ -55,5 +55,12 @@
       ],
       "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver{{/if}}"
     }
+  ],
+  "assignees": [
+    "yurak"
+  ],
+  "timezone": "Asia/Tokyo",
+  "labels": [
+    "renovate"
   ]
 }
