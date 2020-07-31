@@ -12,6 +12,28 @@
         "digest"
       ],
       "automerge": false
+    },
+    {
+      "datasources": [
+        "repology"
+      ],
+      "packagePatterns": [
+        "^alpine_3_12/"
+      ],
+      "separateMajorMinor": false,
+      "groupName": "alpine packages",
+      "groupSlug": "alpine"
+    }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": [
+        "(^|/)Dockerfile$"
+      ],
+      "matchStrings": [
+        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VERSION=\"?(?<currentValue>.*?)\"?\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver{{/if}}"
     }
   ],
   "assignees": [
