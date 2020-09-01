@@ -39,8 +39,9 @@ jobs:
           sudo mv $HOME/work/_temp/.minikube $HOME
           sudo mv $HOME/work/_temp/minikube /usr/bin
           sudo sed -i -e 's/work\/_temp\///g' $HOME/.kube/config
+          sudo echo $HOME
           echo ::set-env name=MINIKUBE_HOME::$HOME
-          sudo eval $(minikube docker-env)
+          sudo minikube docker-env
           sudo minikube addons enable ingress
           sudo minikube addons list
       - name: wait for set up ingress
