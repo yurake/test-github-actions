@@ -1,7 +1,8 @@
 name: Hadolint
 on:
   push:
-  pull_request:
+    paths:
+      - ".github/workflows/hadolint.yml"
 jobs:
   build:
     runs-on: ubuntu-latest
