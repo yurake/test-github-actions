@@ -36,12 +36,11 @@ jobs:
       - name: minikube settings
         run: |
           sudo ls -l $HOME/work/_temp/.minikube/machines/minikube/id_rsa
-          sudo mv $HOME/work/_temp/.minikube $HOME
+          sudo cp -rp $HOME/work/_temp/.minikube $HOME
           sudo mv $HOME/work/_temp/minikube /usr/bin
           sudo sed -i -e 's/work\/_temp\///g' $HOME/.kube/config
           sudo echo $HOME
           echo ::set-env name=MINIKUBE_HOME::$HOME
-          sudo minikube docker-env
           sudo minikube addons enable ingress
           sudo minikube addons list
       - name: wait for set up ingress
