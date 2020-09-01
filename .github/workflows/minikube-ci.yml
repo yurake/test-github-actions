@@ -36,9 +36,10 @@ jobs:
       - name: minikube settings
         run: |
           sudo ls -l $HOME/work/_temp/.minikube/machines/minikube/id_rsa
-          sudo cp -rp $HOME/work/_temp/.minikube $HOME
+          sudo mv $HOME/work/_temp/.minikube $HOME
           sudo mv $HOME/work/_temp/minikube /usr/bin
           sudo sed -i -e 's/work\/_temp\///g' $HOME/.kube/config
+          sudo sed -i -e 's/work\/_temp\///g' $HOME/.minikube/machines/minikube/config.json
           sudo echo $HOME
           echo ::set-env name=MINIKUBE_HOME::$HOME
           sudo minikube addons enable ingress
