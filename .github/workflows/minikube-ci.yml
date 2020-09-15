@@ -45,9 +45,6 @@ jobs:
           sudo minikube config set vm-driver none
           sudo minikube start
           sudo minikube update-context
-          sudo mv /home/runner/.kube /home/runner/.minikube $HOME
-          sudo chown -R $USER $HOME/.kube $HOME/.minikube
-          echo ::set-env name=MINIKUBE_HOME::$HOME
           sudo minikube addons enable ingress
           sudo minikube addons list
           # https://minikube.sigs.k8s.io/docs/drivers/docker/#troubleshooting
@@ -55,19 +52,19 @@ jobs:
           sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
       - name: wait for set up ingress
         run: |
-          kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=10m
+          ksudo ubectl wait --all-namespaces=true --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=10m
       - name: apply minimal service
         run: |
           sh ./kubernetes/apply-default-minimal.sh
           sleep 10
       - name: run e2e test
         run: |
-          kubectl apply -f kubernetes/monitoring/test/postmannewman/postmannewman-job.yaml
+          sudo kubectl apply -f kubernetes/monitoring/test/postmannewman/postmannewman-job.yaml
       - name: wait for complete e2e job
         run: |
-          kubectl -n monitoring wait --for=condition=complete --timeout=15m job/postmannewman-job
-          kubectl -n monitoring describe job postmannewman-job
-          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
+          sudo kubectl -n monitoring wait --for=condition=complete --timeout=15m job/postmannewman-job
+          sudo kubectl -n monitoring describe job postmannewman-job
+          sudo kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
       - name: check minikube status
         if: always()
         run: |
