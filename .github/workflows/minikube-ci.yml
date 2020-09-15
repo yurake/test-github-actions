@@ -42,7 +42,6 @@ jobs:
           driver: docker
       - name: minikube settings
         run: |
-          sudo ls -l $HOME/work/_temp/.minikube/machines/minikube/id_rsa
           sudo mv $HOME/work/_temp/.minikube $HOME
           sudo mv $HOME/work/_temp/minikube /usr/bin
           sudo sed -i -e 's/work\/_temp\///g' $HOME/.kube/config
@@ -65,7 +64,7 @@ jobs:
           sudo kubectl apply -f kubernetes/monitoring/test/postmannewman/postmannewman-job.yaml
       - name: wait for complete e2e job
         run: |
-          sudo kubectl -n monitoring wait --for=condition=complete --timeout=5m job/postmannewman-job
+          sudo kubectl -n monitoring wait --for=condition=complete --timeout=15m job/postmannewman-job
           sudo kubectl -n monitoring describe job postmannewman-job
           sudo kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
       - name: check minikube status
@@ -122,8 +121,8 @@ jobs:
       - name: check log storage-provisioner
         if: always()
         run: |
-          sudo kubectl -n kube-system describe po $(kubectl get pods -n kube-system | awk '{print $1}' | grep storage-provisionerr)
-          sudo kubectl -n kube-system logs $(kubectl get pods -n kube-system | awk '{print $1}' | grep storage-provisionerr)
+          sudo kubectl -n kube-system describe po $(kubectl get pods -n kube-system | awk '{print $1}' | grep storage-provisioner)
+          sudo kubectl -n kube-system logs $(kubectl get pods -n kube-system | awk '{print $1}' | grep storage-provisioner)
       - name: check after test postmannewman-job
         if: always()
         run: |
