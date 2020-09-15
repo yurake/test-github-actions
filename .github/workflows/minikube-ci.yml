@@ -42,11 +42,11 @@ jobs:
       - name: minikube settings
         run: |
           sudo apt install conntrack
-          sudo minikube config set vm-driver none
-          sudo minikube start
-          sudo minikube update-context
-          sudo minikube addons enable ingress
-          sudo minikube addons list
+          minikube config set vm-driver docker
+          minikube start
+          minikube update-context
+          minikube addons enable ingress
+          minikube addons list
           # https://minikube.sigs.k8s.io/docs/drivers/docker/#troubleshooting
           sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
           sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
@@ -59,12 +59,12 @@ jobs:
           sleep 10
       - name: run e2e test
         run: |
-          sudo kubectl apply -f kubernetes/monitoring/test/postmannewman/postmannewman-job.yaml
+          kubectl apply -f kubernetes/monitoring/test/postmannewman/postmannewman-job.yaml
       - name: wait for complete e2e job
         run: |
-          sudo kubectl -n monitoring wait --for=condition=complete --timeout=15m job/postmannewman-job
-          sudo kubectl -n monitoring describe job postmannewman-job
-          sudo kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
+          kubectl -n monitoring wait --for=condition=complete --timeout=15m job/postmannewman-job
+          kubectl -n monitoring describe job postmannewman-job
+          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
       - name: check minikube status
         if: always()
         run: |
