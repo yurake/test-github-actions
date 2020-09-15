@@ -44,7 +44,7 @@ jobs:
           sudo apt install conntrack
           minikube config set vm-driver docker
           minikube config set cpus 4
-          minikube config set memory 8192
+          minikube config set memory 6144
           minikube start
           minikube update-context
           minikube addons enable ingress
