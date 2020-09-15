@@ -45,10 +45,8 @@ jobs:
           sudo minikube config set vm-driver none
           sudo minikube start
           sudo minikube update-context
-          sudo mv $HOME/work/_temp/.minikube $HOME
-          sudo mv $HOME/work/_temp/minikube /usr/bin
-          sudo sed -i -e 's/work\/_temp\///g' $HOME/.kube/config
-          sudo sed -i -e 's/work\/_temp\///g' $HOME/.minikube/machines/minikube/config.json
+          sudo mv /home/runner/.kube /home/runner/.minikube $HOME
+          sudo chown -R $USER $HOME/.kube $HOME/.minikube
           echo ::set-env name=MINIKUBE_HOME::$HOME
           sudo minikube addons enable ingress
           sudo minikube addons list
