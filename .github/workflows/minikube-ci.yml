@@ -41,13 +41,8 @@ jobs:
           k8s-version: ${{ matrix.kubernetes }}
       - name: minikube settings
         run: |
-          sudo mv $HOME/work/_temp/.minikube $HOME
-          sudo mv $HOME/work/_temp/minikube /usr/bin
-          sudo sed -i -e 's/work\/_temp\///g' $HOME/.kube/config
-          sudo sed -i -e 's/work\/_temp\///g' $HOME/.minikube/machines/minikube/config.json
-          echo ::set-env name=MINIKUBE_HOME::$HOME
-          sudo minikube addons enable ingress
-          sudo minikube addons list
+          minikube addons enable ingress
+          minikube addons list
           # https://minikube.sigs.k8s.io/docs/drivers/docker/#troubleshooting
           sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
           sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
