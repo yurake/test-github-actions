@@ -41,6 +41,8 @@ jobs:
           k8s-version: ${{ matrix.kubernetes }}
       - name: minikube settings
         run: |
+          minikube start
+          minikube update-context
           minikube addons enable ingress
           minikube addons list
           # https://minikube.sigs.k8s.io/docs/drivers/docker/#troubleshooting
