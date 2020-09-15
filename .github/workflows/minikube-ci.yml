@@ -62,9 +62,12 @@ jobs:
       - name: run e2e test
         run: |
           kubectl apply -f kubernetes/monitoring/test/postmannewman/postmannewman-job.yaml
+      - name: wait and check
+        run: |
+          for i in `seq 1 15`; do; kubectl get po --all-namespaces=true; sleep 60; done
       - name: wait for complete e2e job
         run: |
-          kubectl -n monitoring wait --for=condition=complete --timeout=15m job/postmannewman-job
+          kubectl -n monitoring wait --for=condition=complete --timeout=1m job/postmannewman-job
           kubectl -n monitoring describe job postmannewman-job
           kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
       - name: check minikube status
