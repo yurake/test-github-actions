@@ -39,7 +39,7 @@ jobs:
         with:
           minikube version: ${{ matrix.minikube }}
           kubernetes version: ${{ matrix.kubernetes }}
-          driver: docker
+          # driver: docker
       - name: minikube settings
         run: |
           sudo mv $HOME/work/_temp/.minikube $HOME
