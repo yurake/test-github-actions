@@ -2,16 +2,23 @@ name: Minikube CI
 
 on:
   push:
+    branches:
+      - master
     paths:
+      - "application/**"
+      - "kubernetes/**"
       - ".github/workflows/minikube-ci.yml"
+  issues:
+    types: [closed]
 
 jobs:
   minikube-k8s:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        minikube: [v1.12.2, v1.12.3]
+        minikube: [v1.12.3, v1.13.0]
         kubernetes: [v1.18.2, v1.18.3]
+      fail-fast: false
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -40,7 +47,6 @@ jobs:
           sudo mv $HOME/work/_temp/minikube /usr/bin
           sudo sed -i -e 's/work\/_temp\///g' $HOME/.kube/config
           sudo sed -i -e 's/work\/_temp\///g' $HOME/.minikube/machines/minikube/config.json
-          sudo echo $HOME
           echo ::set-env name=MINIKUBE_HOME::$HOME
           sudo minikube addons enable ingress
           sudo minikube addons list
@@ -56,10 +62,11 @@ jobs:
           sudo kubectl apply -f kubernetes/monitoring/test/postmannewman/postmannewman-job.yaml
       - name: wait for complete e2e job
         run: |
-          sudo kubectl -n monitoring wait --for=condition=complete --timeout=20m job/postmannewman-job
+          sudo kubectl -n monitoring wait --for=condition=complete --timeout=5m job/postmannewman-job
           sudo kubectl -n monitoring describe job postmannewman-job
           sudo kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
       - name: check minikube status
+        if: always()
         run: |
           sudo kubectl get po --all-namespaces=true
           sudo kubectl get nodes
@@ -70,23 +77,52 @@ jobs:
           sudo kubectl get ingress
           df -h /
       - name: check log jaxrs-mysql
+        if: always()
         run: |
+          sudo kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-mysql)
           sudo kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-mysql)
       - name: check log jaxrs-postgres
+        if: always()
         run: |
+          sudo kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-postgres)
           sudo kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-postgres)
       - name: check log jaxrs-mongodb
+        if: always()
         run: |
+          sudo kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-mongodb)
           sudo kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-mongodb)
       - name: check log jaxrs-redis
+        if: always()
         run: |
+          sudo kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-redis)
           sudo kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-redis)
       - name: check log jaxrs-memcached
+        if: always()
         run: |
+          sudo kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-memcached)
           sudo kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-memcached)
       - name: check log jaxrs-activemq
+        if: always()
         run: |
+          sudo kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-activemq)
           sudo kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-activemq)
-      - name: check after test postmannewman-job
+      - name: check log mysql
+        if: always()
         run: |
+          sudo kubectl describe po $(kubectl get pods | awk '{print $1}' | grep -E ^mysql)
+          sudo kubectl logs $(kubectl get pods | awk '{print $1}' | grep -E ^mysql) -c mysql
+      - name: check log ingress
+        if: always()
+        run: |
+          sudo kubectl -n kube-system describe po $(kubectl get pods -n kube-system | awk '{print $1}' | grep ingress-nginx-controller)
+          sudo kubectl -n kube-system logs $(kubectl get pods -n kube-system | awk '{print $1}' | grep ingress-nginx-controller)
+      - name: check log storage-provisioner
+        if: always()
+        run: |
+          sudo kubectl -n kube-system describe po $(kubectl get pods -n kube-system | awk '{print $1}' | grep storage-provisionerr)
+          sudo kubectl -n kube-system logs $(kubectl get pods -n kube-system | awk '{print $1}' | grep storage-provisionerr)
+      - name: check after test postmannewman-job
+        if: always()
+        run: |
+          sudo kubectl -n monitoring describe po $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
           sudo kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
