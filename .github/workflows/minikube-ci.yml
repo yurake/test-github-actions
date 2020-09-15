@@ -41,6 +41,7 @@ jobs:
           k8s-version: ${{ matrix.kubernetes }}
       - name: minikube settings
         run: |
+          sudo apt install conntrack
           sudo minikube config set vm-driver none
           sudo minikube start
           sudo minikube update-context
