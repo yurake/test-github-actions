@@ -52,7 +52,7 @@ jobs:
           sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
       - name: wait for set up ingress
         run: |
-          ksudo ubectl wait --all-namespaces=true --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=10m
+          kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=10m
       - name: apply minimal service
         run: |
           sh ./kubernetes/apply-default-minimal.sh
