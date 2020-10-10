@@ -70,72 +70,19 @@ jobs:
           kubectl apply -f kubernetes/monitoring/test/ab/ab-redis-job.yaml
       - name: wait for complete e2e job
         run: |
-          kubectl -n monitoring wait --for=condition=complete --timeout=15m job/postmannewman-job
-          kubectl -n monitoring describe job postmannewman-job
-          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
-      - name: check minikube status
-        if: always()
-        run: |
-          kubectl get po --all-namespaces=true
-          kubectl get nodes
-          kubectl get pv
-          kubectl get pvc
-          kubectl get all
-          kubectl get all -n monitoring
-          kubectl get ingress
-          df -h /
-      - name: check log jaxrs-mysql
-        if: always()
-        run: |
-          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-mysql)
-          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-mysql)
-      - name: check log jaxrs-postgres
-        if: always()
-        run: |
-          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-postgres)
-          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-postgres)
-      - name: check log jaxrs-mongodb
-        if: always()
-        run: |
-          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-mongodb)
-          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-mongodb)
+          kubectl -n monitoring wait --for=condition=complete --timeout=15m ab-redis
+          kubectl -n monitoring describe job ab-redis
+          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep ab-redis)
       - name: check log jaxrs-redis
         if: always()
         run: |
           kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-redis)
           kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-redis)
-      - name: check log jaxrs-memcached
+      - name: check after test ab-redis
         if: always()
         run: |
-          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-memcached)
-          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-memcached)
-      - name: check log jaxrs-activemq
-        if: always()
-        run: |
-          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-activemq)
-          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-activemq)
-      - name: check log mysql
-        if: always()
-        run: |
-          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep -E ^mysql)
-          kubectl logs $(kubectl get pods | awk '{print $1}' | grep -E ^mysql) -c mysql
-      - name: check log ingress
-        if: always()
-        run: |
-          kubectl get ingress
-          kubectl describe ingress nginx
-          kubectl -n kube-system describe po $(kubectl get pods -n kube-system | awk '{print $1}' | grep ingress-nginx-controller)
-          kubectl -n kube-system logs $(kubectl get pods -n kube-system | awk '{print $1}' | grep ingress-nginx-controller)
-      - name: check log storage-provisioner
-        if: always()
-        run: |
-          kubectl -n kube-system describe po $(kubectl get pods -n kube-system | awk '{print $1}' | grep storage-provisioner)
-          kubectl -n kube-system logs $(kubectl get pods -n kube-system | awk '{print $1}' | grep storage-provisioner)
-      - name: check after test postmannewman-job
-        if: always()
-        run: |
-          kubectl -n monitoring describe po $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
-          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
+          kubectl -n monitoring describe po $(kubectl get pods -n monitoring | awk '{print $1}' | grep ab-redis)
+          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep ab-redis)
       - name: check minikube status
         if: always()
         run: |
