@@ -1,0 +1,149 @@
+name: Minikube Stress CI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "application/**"
+      - "kubernetes/**"
+      - ".github/workflows/minikube-ci.yml"
+  issues:
+    types: [closed]
+
+jobs:
+  redis-ab:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        minikube: [1.13.1]
+        kubernetes: [1.19.2]
+      fail-fast: false
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          repository: yurake/k8s-3tier-webapp
+      - name: delete installed software not use
+        run: |
+          df -h /
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/share/swift
+          sudo rm -rf /opt/hostedtoolcache/Python
+          sudo rm -rf /opt/hostedtoolcache/Ruby
+          df -h /
+      - name: setup minikube
+        uses: opsgang/ga-setup-minikube@v0.1.1
+        with:
+          minikube-version: ${{ matrix.minikube }}
+          k8s-version: ${{ matrix.kubernetes }}
+      - name: minikube settings
+        run: |
+          sudo apt install conntrack
+          minikube config set vm-driver docker
+          minikube config set cpus 2
+          minikube config set memory 6144
+          minikube start
+          minikube update-context
+          minikube addons enable ingress
+          minikube addons list
+          # https://minikube.sigs.k8s.io/docs/drivers/docker/#troubleshooting
+          sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
+          sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+      - name: wait for set up ingress
+        run: |
+          kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=10m
+      - name: apply minimal service
+        run: |
+          kubectl apply -f ./kubernetes/jaeger/jaeger-all-in-one-template.yml
+          kubectl apply -f ./kubernetes/redis/redis-deployment.yaml
+          kubectl apply -f ./kubernetes/redis/redis-service.yaml
+          kubectl apply -f ./kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-deployment.yaml
+          kubectl apply -f ./kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-service.yaml
+          kubectl apply -f ./kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-service-externalname.yaml
+          sleep 10
+      - name: run e2e test
+        run: |
+          kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app=jaxrs-redis-quarkus --timeout=10m
+          kubectl apply -f kubernetes/monitoring/test/ab/ab-redis-job.yaml
+      - name: wait for complete e2e job
+        run: |
+          kubectl -n monitoring wait --for=condition=complete --timeout=15m job/postmannewman-job
+          kubectl -n monitoring describe job postmannewman-job
+          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
+      - name: check minikube status
+        if: always()
+        run: |
+          kubectl get po --all-namespaces=true
+          kubectl get nodes
+          kubectl get pv
+          kubectl get pvc
+          kubectl get all
+          kubectl get all -n monitoring
+          kubectl get ingress
+          df -h /
+      - name: check log jaxrs-mysql
+        if: always()
+        run: |
+          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-mysql)
+          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-mysql)
+      - name: check log jaxrs-postgres
+        if: always()
+        run: |
+          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-postgres)
+          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-postgres)
+      - name: check log jaxrs-mongodb
+        if: always()
+        run: |
+          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-mongodb)
+          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-mongodb)
+      - name: check log jaxrs-redis
+        if: always()
+        run: |
+          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-redis)
+          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-redis)
+      - name: check log jaxrs-memcached
+        if: always()
+        run: |
+          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-memcached)
+          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-memcached)
+      - name: check log jaxrs-activemq
+        if: always()
+        run: |
+          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-activemq)
+          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-activemq)
+      - name: check log mysql
+        if: always()
+        run: |
+          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep -E ^mysql)
+          kubectl logs $(kubectl get pods | awk '{print $1}' | grep -E ^mysql) -c mysql
+      - name: check log ingress
+        if: always()
+        run: |
+          kubectl get ingress
+          kubectl describe ingress nginx
+          kubectl -n kube-system describe po $(kubectl get pods -n kube-system | awk '{print $1}' | grep ingress-nginx-controller)
+          kubectl -n kube-system logs $(kubectl get pods -n kube-system | awk '{print $1}' | grep ingress-nginx-controller)
+      - name: check log storage-provisioner
+        if: always()
+        run: |
+          kubectl -n kube-system describe po $(kubectl get pods -n kube-system | awk '{print $1}' | grep storage-provisioner)
+          kubectl -n kube-system logs $(kubectl get pods -n kube-system | awk '{print $1}' | grep storage-provisioner)
+      - name: check after test postmannewman-job
+        if: always()
+        run: |
+          kubectl -n monitoring describe po $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
+          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep postmannewman-job)
+      - name: check minikube status
+        if: always()
+        run: |
+          kubectl get po --all-namespaces=true
+          kubectl get nodes
+          kubectl get pv
+          kubectl get pvc
+          kubectl get all
+          kubectl get all -n monitoring
+          kubectl get ingress
+          df -h /
