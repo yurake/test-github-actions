@@ -57,7 +57,7 @@ jobs:
         run: |
           kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=10m
       - name: apply activemq resource
-        if: ${{ matrix.app }} == activemq
+        if: matrix.app == 'activemq'
         run: |
           kubectl apply -f kubernetes/activemq/activemq-pv.yaml
           kubectl apply -f kubernetes/activemq/activemq-pvc.yaml
@@ -65,13 +65,13 @@ jobs:
           kubectl apply -f kubernetes/activemq/activemq-service.yaml
           kubectl apply -f kubernetes/activemq/activemq-ingress.yaml
       - name: apply hazelcast resource
-        if: ${{ matrix.app }} == hazelcast
+        if: matrix.app == 'hazelcast'
         run: |
           kubectl apply -f kubernetes/hazelcast/hazelcast-configmap.yaml
           kubectl apply -f kubernetes/hazelcast/hazelcast-statefulset.yaml
           kubectl apply -f kubernetes/hazelcast/hazelcast-service.yaml
       - name: apply rabbitmq resource
-        if: ${{ matrix.app }} == rabbitmq
+        if: matrix.app == 'rabbitmq'
         run: |
           kubectl apply -f kubernetes/rabbitmq/rabbitmq-configmap.yaml
           kubectl apply -f kubernetes/rabbitmq/rabbitmq-secret.yaml
@@ -79,7 +79,7 @@ jobs:
           kubectl apply -f kubernetes/rabbitmq/rabbitmq-service.yaml
           kubectl apply -f kubernetes/rabbitmq/rabbitmq-ingress.yaml
       - name: apply redis resource
-        if: ${{ matrix.app }} == redis
+        if: matrix.app == 'redis'
         run: |
           kubectl apply -f kubernetes/redis/redis-deployment.yaml
           kubectl apply -f kubernetes/redis/redis-service.yaml
