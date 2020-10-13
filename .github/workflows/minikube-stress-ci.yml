@@ -71,7 +71,7 @@ jobs:
           kubectl apply -f kubernetes/monitoring/test/ab/ab-redis-job.yaml
       - name: wait for complete e2e job
         run: |
-          kubectl -n monitoring wait --for=condition=complete --timeout=15m ab-redis
+          kubectl -n monitoring wait --for=condition=complete --timeout=15m job/ab-redis
           kubectl -n monitoring describe job ab-redis
           kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep ab-redis)
       - name: check log jaxrs-redis
