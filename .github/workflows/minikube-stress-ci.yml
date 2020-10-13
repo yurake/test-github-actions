@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        minikube: [1.13.1]
+        minikube: [1.14.0]
         kubernetes: [1.19.2]
         app: [redis, activemq, rabbitmq, hazelcast]
       fail-fast: false
@@ -56,12 +56,37 @@ jobs:
       - name: wait for set up ingress
         run: |
           kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=10m
+      - name: apply activemq resource
+        if: ${{ matrix.app }} == activemq
+        run: |
+          kubectl apply -f kubernetes/activemq/activemq-pv.yaml
+          kubectl apply -f kubernetes/activemq/activemq-pvc.yaml
+          kubectl apply -f kubernetes/activemq/activemq-deployment.yaml
+          kubectl apply -f kubernetes/activemq/activemq-service.yaml
+          kubectl apply -f kubernetes/activemq/activemq-ingress.yaml
+      - name: apply hazelcast resource
+        if: ${{ matrix.app }} == hazelcast
+        run: |
+          kubectl apply -f kubernetes/hazelcast/hazelcast-configmap.yaml
+          kubectl apply -f kubernetes/hazelcast/hazelcast-statefulset.yaml
+          kubectl apply -f kubernetes/hazelcast/hazelcast-service.yaml
+      - name: apply rabbitmq resource
+        if: ${{ matrix.app }} == rabbitmq
+        run: |
+          kubectl apply -f kubernetes/rabbitmq/rabbitmq-configmap.yaml
+          kubectl apply -f kubernetes/rabbitmq/rabbitmq-secret.yaml
+          kubectl apply -f kubernetes/rabbitmq/rabbitmq-deployment.yaml
+          kubectl apply -f kubernetes/rabbitmq/rabbitmq-service.yaml
+          kubectl apply -f kubernetes/rabbitmq/rabbitmq-ingress.yaml
+      - name: apply redis resource
+        if: ${{ matrix.app }} == redis
+        run: |
+          kubectl apply -f kubernetes/redis/redis-deployment.yaml
+          kubectl apply -f kubernetes/redis/redis-service.yaml
       - name: apply minimal service
         run: |
           kubectl apply -f kubernetes/monitoring/monitoring-namespace.yaml
           kubectl apply -f kubernetes/jaeger/jaeger-all-in-one-template.yml
-          kubectl apply -f kubernetes/${{ matrix.app }}/${{ matrix.app }}-deployment.yaml
-          kubectl apply -f kubernetes/${{ matrix.app }}/${{ matrix.app }}-service.yaml
           kubectl apply -f kubernetes/jaxrs-${{ matrix.app }}-quarkus/jaxrs-${{ matrix.app }}-quarkus-deployment.yaml
           kubectl apply -f kubernetes/jaxrs-${{ matrix.app }}-quarkus/jaxrs-${{ matrix.app }}-quarkus-service.yaml
           kubectl apply -f kubernetes/jaxrs-${{ matrix.app }}-quarkus/jaxrs-${{ matrix.app }}-quarkus-service-externalname.yaml
