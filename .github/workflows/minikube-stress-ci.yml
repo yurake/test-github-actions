@@ -5,9 +5,7 @@ on:
     branches:
       - master
     paths:
-      - "application/**"
-      - "kubernetes/**"
-      - ".github/workflows/minikube-ci.yml"
+      - ".github/workflows/minikube-stress-ci.yml"
   issues:
     types: [closed]
 
