@@ -57,12 +57,13 @@ jobs:
           kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=10m
       - name: apply minimal service
         run: |
-          kubectl apply -f ./kubernetes/jaeger/jaeger-all-in-one-template.yml
-          kubectl apply -f ./kubernetes/redis/redis-deployment.yaml
-          kubectl apply -f ./kubernetes/redis/redis-service.yaml
-          kubectl apply -f ./kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-deployment.yaml
-          kubectl apply -f ./kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-service.yaml
-          kubectl apply -f ./kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-service-externalname.yaml
+          kubectl apply -f kubernetes/monitoring/monitoring-namespace.yaml
+          kubectl apply -f kubernetes/jaeger/jaeger-all-in-one-template.yml
+          kubectl apply -f kubernetes/redis/redis-deployment.yaml
+          kubectl apply -f kubernetes/redis/redis-service.yaml
+          kubectl apply -f kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-deployment.yaml
+          kubectl apply -f kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-service.yaml
+          kubectl apply -f kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-service-externalname.yaml
           sleep 10
       - name: run e2e test
         run: |
