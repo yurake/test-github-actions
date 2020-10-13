@@ -25,16 +25,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: yurake/k8s-3tier-webapp
-      - name: delete installed software not use
-        run: |
-          df -h /
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/share/swift
-          sudo rm -rf /opt/hostedtoolcache/Python
-          sudo rm -rf /opt/hostedtoolcache/Ruby
-          df -h /
       - name: setup minikube
         uses: opsgang/ga-setup-minikube@v0.1.1
         with:
