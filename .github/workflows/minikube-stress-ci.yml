@@ -12,12 +12,13 @@ on:
     types: [closed]
 
 jobs:
-  redis-ab:
+  stress-ci:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         minikube: [1.13.1]
         kubernetes: [1.19.2]
+        app: [redis, activemq, rabbitmq, hazelcast]
       fail-fast: false
     steps:
       - name: checkout
@@ -59,31 +60,31 @@ jobs:
         run: |
           kubectl apply -f kubernetes/monitoring/monitoring-namespace.yaml
           kubectl apply -f kubernetes/jaeger/jaeger-all-in-one-template.yml
-          kubectl apply -f kubernetes/redis/redis-deployment.yaml
-          kubectl apply -f kubernetes/redis/redis-service.yaml
-          kubectl apply -f kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-deployment.yaml
-          kubectl apply -f kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-service.yaml
-          kubectl apply -f kubernetes/jaxrs-redis-quarkus/jaxrs-redis-quarkus-service-externalname.yaml
+          kubectl apply -f kubernetes/${{ matrix.app }}/${{ matrix.app }}-deployment.yaml
+          kubectl apply -f kubernetes/${{ matrix.app }}/${{ matrix.app }}-service.yaml
+          kubectl apply -f kubernetes/jaxrs-${{ matrix.app }}-quarkus/jaxrs-${{ matrix.app }}-quarkus-deployment.yaml
+          kubectl apply -f kubernetes/jaxrs-${{ matrix.app }}-quarkus/jaxrs-${{ matrix.app }}-quarkus-service.yaml
+          kubectl apply -f kubernetes/jaxrs-${{ matrix.app }}-quarkus/jaxrs-${{ matrix.app }}-quarkus-service-externalname.yaml
           sleep 10
       - name: run e2e test
         run: |
-          kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app=jaxrs-redis-quarkus --timeout=10m
-          kubectl apply -f kubernetes/monitoring/test/ab/ab-redis-job.yaml
+          kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app=jaxrs-${{ matrix.app }}-quarkus --timeout=10m
+          kubectl apply -f kubernetes/monitoring/test/ab/ab-${{ matrix.app }}-job.yaml
       - name: wait for complete e2e job
         run: |
-          kubectl -n monitoring wait --for=condition=complete --timeout=15m job/ab-redis
-          kubectl -n monitoring describe job ab-redis
-          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep ab-redis)
-      - name: check log jaxrs-redis
+          kubectl -n monitoring wait --for=condition=complete --timeout=15m job/ab-${{ matrix.app }}
+          kubectl -n monitoring describe job ab-${{ matrix.app }}
+          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep ab-${{ matrix.app }})
+      - name: check log jaxrs-${{ matrix.app }}
         if: always()
         run: |
-          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-redis)
-          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-redis)
-      - name: check after test ab-redis
+          kubectl describe po $(kubectl get pods | awk '{print $1}' | grep jaxrs-${{ matrix.app }})
+          kubectl logs $(kubectl get pods | awk '{print $1}' | grep jaxrs-${{ matrix.app }})
+      - name: check after test ab-${{ matrix.app }}
         if: always()
         run: |
-          kubectl -n monitoring describe po $(kubectl get pods -n monitoring | awk '{print $1}' | grep ab-redis)
-          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep ab-redis)
+          kubectl -n monitoring describe po $(kubectl get pods -n monitoring | awk '{print $1}' | grep ab-${{ matrix.app }})
+          kubectl -n monitoring logs $(kubectl get pods -n monitoring | awk '{print $1}' | grep ab-${{ matrix.app }})
       - name: check minikube status
         if: always()
         run: |
