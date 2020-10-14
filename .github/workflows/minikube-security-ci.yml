@@ -86,6 +86,8 @@ jobs:
       - name: apply minimal service
         run: |
           kubectl apply -f kubernetes/nginx/nginx-ingress.yaml
+          kubectl apply -f kubernetes/nginx/nginx-deployment.yaml
+          kubectl apply -f kubernetes/nginx/nginx-service.yaml
           kubectl apply -f kubernetes/monitoring/monitoring-namespace.yaml
           kubectl apply -f kubernetes/jaeger/jaeger-all-in-one-template.yml
           kubectl apply -f kubernetes/jaxrs-${{ matrix.app }}-quarkus/jaxrs-${{ matrix.app }}-quarkus-deployment.yaml
