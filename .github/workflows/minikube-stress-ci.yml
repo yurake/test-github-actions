@@ -18,7 +18,7 @@ jobs:
       matrix:
         minikube: [1.14.0]
         kubernetes: [1.19.2]
-        app: [redis, activemq, rabbitmq, hazelcast]
+        app: [redis, activemq, rabbitmq, hazelcast, kafka]
       fail-fast: false
     steps:
       - name: checkout
@@ -73,6 +73,14 @@ jobs:
         run: |
           kubectl apply -f kubernetes/redis/redis-deployment.yaml
           kubectl apply -f kubernetes/redis/redis-service.yaml
+      - name: apply kafka resource
+        if: matrix.app == 'kafka'
+        run: |
+          kubectl apply -f kubernetes/zookeeper/zookeeper-statefulset.yaml
+          kubectl apply -f kubernetes/zookeeper/zookeeper-service.yaml
+          kubectl apply -f kubernetes/kafka/kafka-statefulset.yaml
+          kubectl apply -f kubernetes/kafka/kafka-service.yaml
+          kubectl apply -f kubernetes/producer-kafka-quarkus/producer-kafka-quarkus-deployment.yaml
       - name: apply minimal service
         run: |
           kubectl apply -f kubernetes/monitoring/monitoring-namespace.yaml
