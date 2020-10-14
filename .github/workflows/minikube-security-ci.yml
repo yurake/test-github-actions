@@ -47,8 +47,7 @@ jobs:
         run: |
           kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=10m
       - name: add hosts
-        run: |
-          sudo echo `minikube ip` k8s.3tier.webapp >> /etc/hosts
+        run: echo `minikube ip` k8s.3tier.webapp | sudo tee -a /etc/hosts
       - name: apply activemq resource
         if: matrix.app == 'activemq'
         run: |
