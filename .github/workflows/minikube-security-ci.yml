@@ -95,8 +95,9 @@ jobs:
           kubectl apply -f kubernetes/jaxrs-${{ matrix.app }}-quarkus/jaxrs-${{ matrix.app }}-quarkus-service-externalname.yaml
           sleep 10
       - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.3.0
+        uses: zaproxy/action-baseline@v0.4.0
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           target: "http://k8s.3tier.webapp/"
       - name: check minikube status
         if: always()
