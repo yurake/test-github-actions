@@ -35,10 +35,11 @@ jobs:
           sudo rm -rf /opt/hostedtoolcache/Ruby
           df -h /
       - name: setup minikube
-        uses: opsgang/ga-setup-minikube@v0.1.1
+        uses: manusa/actions-setup-minikube@v2.3.0
         with:
-          minikube-version: ${{ matrix.minikube }}
-          k8s-version: ${{ matrix.kubernetes }}
+          minikube version: ${{ matrix.minikube }}
+          kubernetes version: ${{ matrix.kubernetes }}
+          github token: ${{ secrets.GITHUB_TOKEN }}
       - name: minikube settings
         run: |
           sudo apt install conntrack
