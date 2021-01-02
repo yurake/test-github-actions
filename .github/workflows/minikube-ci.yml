@@ -39,6 +39,7 @@ jobs:
         with:
           minikube version: ${{ matrix.minikube }}
           kubernetes version: ${{ matrix.kubernetes }}
+          driver: docker
           github token: ${{ secrets.GITHUB_TOKEN }}
       - name: minikube settings
         run: |
