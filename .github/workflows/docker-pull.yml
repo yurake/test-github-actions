@@ -1,0 +1,17 @@
+name: Docker pull
+
+on:
+  push:
+    paths:
+      - ".github/workflows/docker-pull.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2.3.2
+
+      - name: docker pull
+        run: |
+          docker pull quay.io/testcontainers/ryuk:0.2.3
