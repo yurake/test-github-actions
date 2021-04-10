@@ -3,6 +3,7 @@
     "config:base",
     "docker:enableMajor"
   ],
+  "masterIssue": true,
   "packageRules": [
     {
       "updateTypes": [
