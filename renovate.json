@@ -3,6 +3,7 @@
     "config:base",
     "docker:enableMajor"
   ],
+  "recreateClosed": true,
   "packageRules": [
     {
       "updateTypes": [
