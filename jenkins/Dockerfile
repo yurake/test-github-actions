@@ -2,7 +2,7 @@ FROM jenkins/jenkins:2.287-alpine
 ARG BUILD_DATE
 ARG VCS_REF
 # renovate: datasource=repology depName=alpine_3_12/tzdata versioning=loose
-ENV TZDATA_VERSION="2020a-r0"
+ENV TZDATA_VERSION="2021a-r0"
 # renovate: datasource=repology depName=alpine_3_12/gcc versioning=loose
 ENV GCC_VERSION="10.3.1_git20210409-r0"
 # renovate: datasource=repology depName=alpine_3_12/docker versioning=loose
