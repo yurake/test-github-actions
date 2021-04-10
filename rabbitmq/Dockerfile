@@ -1,8 +1,8 @@
-FROM rabbitmq:3.8.8-management-alpine
+FROM rabbitmq:3.8.14-management-alpine
 ARG BUILD_DATE
 ARG VCS_REF
 # renovate: datasource=repology depName=alpine_3_12/tzdata
-ENV TZDATA_VERSION="2020a-r0"
+ENV TZDATA_VERSION="2021a-r0"
 LABEL org.label-schema.build-date=$BUILD_DATE org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/yurake/k8s-3tier-webapp"
 RUN apk update && \
