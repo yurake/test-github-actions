@@ -2,8 +2,8 @@ name: Docker Image CI
 
 on:
   push:
-    paths:
-      - ".github/workflows/docker-image-ci.yml"
+    branches:
+      - master
   pull_request:
 
 jobs:
