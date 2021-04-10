@@ -4,6 +4,7 @@
     "docker:enableMajor"
   ],
   "masterIssue": true,
+  "recreateClosed": true,
   "packageRules": [
     {
       "updateTypes": [
