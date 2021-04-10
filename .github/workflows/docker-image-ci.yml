@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - ".github/workflows/docker-image-ci.yml"
   pull_request:
 
 jobs:
