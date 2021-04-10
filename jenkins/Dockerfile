@@ -1,11 +1,11 @@
 FROM jenkins/jenkins:2.270-alpine
 ARG BUILD_DATE
 ARG VCS_REF
-# renovate: datasource=repology depName=alpine_3_12/tzdata
+# renovate: datasource=repology depName=alpine_3_12/tzdata versioning=loose
 ENV TZDATA_VERSION="2020a-r0"
-# renovate: datasource=repology depName=alpine_3_12/gcc
+# renovate: datasource=repology depName=alpine_3_12/gcc versioning=loose
 ENV GCC_VERSION="9.3.0-r4"
-# renovate: datasource=repology depName=alpine_3_12/docker
+# renovate: datasource=repology depName=alpine_3_12/docker versioning=loose
 ENV DOCKER_VERSION="19.03.12-r0"
 LABEL org.label-schema.build-date=$BUILD_DATE org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/yurake/k8s-3tier-webapp"
