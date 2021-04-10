@@ -30,3 +30,9 @@ jobs:
         run: docker build -t yurak/rabbitmq:latest
           --build-arg VCS_REF=${VCS_REF}
           --build-arg BUILD_DATE=${BUILD_DATE} .
+
+      - name: Build image - jenkins
+        working-directory: ./jenkins
+        run: docker build -t yurak/jenkins:latest
+          --build-arg VCS_REF=${VCS_REF}
+          --build-arg BUILD_DATE=${BUILD_DATE} .
