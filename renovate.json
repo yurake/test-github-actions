@@ -29,7 +29,7 @@
         "repology"
       ],
       "packagePatterns": [
-        "^alpine_3_13/"
+        "^alpine_3_12/"
       ],
       "separateMajorMinor": false,
       "groupName": "alpine packages",
