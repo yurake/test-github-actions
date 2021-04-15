@@ -9,14 +9,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
       - name: lint mysql
-        uses: brpaz/hadolint-action@v1.3.1
+        uses: brpaz/hadolint-action@v1.4.0
         with:
           dockerfile: mysql/Dockerfile
       - name: lint rabbitmq
-        uses: brpaz/hadolint-action@v1.3.1
+        uses: brpaz/hadolint-action@v1.4.0
         with:
           dockerfile: rabbitmq/Dockerfile
       - name: lint jenkins
-        uses: brpaz/hadolint-action@v1.3.1
+        uses: brpaz/hadolint-action@v1.4.0
         with:
           dockerfile: jenkins/Dockerfile
