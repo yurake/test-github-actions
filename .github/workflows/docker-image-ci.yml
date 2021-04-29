@@ -4,7 +4,13 @@ on:
   push:
     branches:
       - master
+    paths:
+      - "**/Dockerfile"
+      - ".github/workflows/docker-image-ci.yml"
   pull_request:
+    paths:
+      - "**/Dockerfile"
+      - ".github/workflows/docker-image-ci.yml"
 
 jobs:
   build:
