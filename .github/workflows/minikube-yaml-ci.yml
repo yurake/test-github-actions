@@ -21,7 +21,7 @@ jobs:
         with:
           repository: yurake/k8s-3tier-webapp
       - name: setup minikube
-        uses: opsgang/ga-setup-minikube@master
+        uses: opsgang/ga-setup-minikube@v0.1.2
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
         with:
