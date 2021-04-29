@@ -17,9 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
+        with:
+          repository: yurake/k8s-3tier-webapp
       - name: setup minikube
-        uses: opsgang/ga-setup-minikube@master
+        uses: opsgang/ga-setup-minikube@v0.1.2
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
         with:
@@ -46,4 +48,5 @@ jobs:
         run: echo `minikube ip` k8s.3tier.webapp | sudo tee -a /etc/hosts
       - name: apply all service
         run: |
+          ls -ltr
           sh ./kubernetes/bin/apply.sh
