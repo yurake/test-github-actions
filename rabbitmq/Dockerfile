@@ -1,4 +1,4 @@
-FROM rabbitmq:3.8.17-management-alpine
+FROM rabbitmq:3.8.19-management-alpine
 ARG BUILD_DATE
 ARG VCS_REF
 # renovate: datasource=repology depName=alpine_3_12/tzdata
