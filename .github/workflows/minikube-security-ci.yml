@@ -19,27 +19,16 @@ jobs:
         uses: actions/checkout@v2.3.4
         with:
           repository: yurake/k8s-3tier-webapp
-      - name: setup minikube
-        uses: opsgang/ga-setup-minikube@v0.1.2
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
-        with:
-          minikube-version: 1.23.2
-          k8s-version: 1.22.2
-      - name: minikube settings
+      - name: Kind Cluster
+        uses: helm/kind-action@v1.2.0
+      - name: Print cluster information
         run: |
-          sudo apt install conntrack
-          minikube config set vm-driver docker
-          minikube config set cpus 2
-          minikube config set memory 6144
-          minikube start
-          minikube update-context
-          minikube addons enable ingress
-          minikube addons list
-          # https://minikube.sigs.k8s.io/docs/drivers/docker/#troubleshooting
-          sudo ln -s /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable/
-          sudo apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
-          kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
+          kubectl config view
+          kubectl cluster-info
+          kubectl get nodes
+          kubectl get pods -n kube-system
+          helm version
+          kubectl version
       - name: wait for set up ingress
         run: |
           kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=10m
