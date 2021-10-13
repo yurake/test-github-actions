@@ -75,8 +75,11 @@ jobs:
         run: |
           kubectl get ingress
           kubectl describe ingress nginx
-      - name: check log nginx
+      - name: check get nginx
         if: always()
         run: |
           kubectl get nginx
+      - name: check describe nginx
+        if: always()
+        run: |
           kubectl describe po nginx
