@@ -15,6 +15,12 @@ jobs:
   security-ci:
     runs-on: ubuntu-latest
     steps:
+      - name: docker pull
+        run: |
+          docker pull yurak/nginx:latest
+      - name: docker up
+        run: |
+          docker up yurak/nginx:latest
       - name: checkout
         uses: actions/checkout@v2.3.4
         with:
