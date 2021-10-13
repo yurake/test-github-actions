@@ -55,7 +55,7 @@ jobs:
         run: |
           curl -v http://k8s.3tier.webapp/
       - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.4.0
+        uses: zaproxy/action-baseline@v0.6.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: "http://k8s.3tier.webapp/"
@@ -75,3 +75,8 @@ jobs:
         run: |
           kubectl get ingress
           kubectl describe ingress nginx
+      - name: check log nginx
+        if: always()
+        run: |
+          kubectl get nginx
+          kubectl describe po nginx
