@@ -29,21 +29,29 @@ jobs:
           kubectl get pods -n kube-system
           helm version
           kubectl version
+      - name: apply nginx
+        if: always()
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
       - name: wait for set up ingress
         run: |
           kubectl wait --all-namespaces=true --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=10m
       - name: add hosts
+        if: always()
         run: echo `minikube ip` k8s.3tier.webapp | sudo tee -a /etc/hosts
       - name: apply minimal service
+        if: always()
         run: |
           kubectl apply -f kubernetes/nginx/nginx-ingress.yaml
           kubectl apply -f kubernetes/nginx/nginx-deployment.yaml
           kubectl apply -f kubernetes/nginx/nginx-service.yaml
           sleep 10
-      - name: ZAP Scan
+      - name: curl ZAP Scan
+        if: always()
         run: |
           curl -v http://k8s.3tier.webapp/
       - name: ZAP Scan
+        if: always()
         uses: zaproxy/action-baseline@v0.6.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
