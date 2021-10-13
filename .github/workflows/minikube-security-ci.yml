@@ -52,6 +52,9 @@ jobs:
           kubectl apply -f kubernetes/nginx/nginx-service.yaml
           sleep 10
       - name: ZAP Scan
+        run: |
+          curl -v http://k8s.3tier.webapp/
+      - name: ZAP Scan
         uses: zaproxy/action-baseline@v0.4.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -67,3 +70,8 @@ jobs:
           kubectl get all -n monitoring
           kubectl get ingress
           df -h /
+      - name: check log ingress
+        if: always()
+        run: |
+          kubectl get ingress
+          kubectl describe ingress nginx
