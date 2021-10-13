@@ -91,10 +91,13 @@ jobs:
           kubectl get all -n monitoring
           kubectl get ingress
           df -h /
-      - name: check log ingress
+      - name: check get ingress
         if: always()
         run: |
           kubectl get ingress
+      - name: check describe ingress
+        if: always()
+        run: |
           kubectl describe ingress nginx
       - name: check get nginx
         if: always()
