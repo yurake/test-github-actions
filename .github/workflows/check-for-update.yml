@@ -20,8 +20,8 @@ jobs:
       - name: check latest tag minikube version
         run: |
           echo "TARGET_VERSION=$(curl -s https://api.github.com/repos/kubernetes/minikube/releases | jq -r '.[].tag_name' | grep -v '-' | sort -t'.' -k2,2n | tail -n 1 | tr -d 'v')" >> $GITHUB_ENV
-          test $TARGET_VERSION != ""
-          test $AAA != ""
+          test "${TARGET_VERSION}" != ""
+          test "${AAA}" != ""
       - name: check diff minikube
         run: |
           echo CURRENT: ${SOURCE_VERSION}
