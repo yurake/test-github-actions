@@ -21,11 +21,11 @@ jobs:
           echo "TARGET_VERSION=$(curl -s https://api.github.com/repos/kubernetes/minikube/releases | jq -r '.[].tag_name' | grep -v '-' | sort -t'.' -k2,2n | tail -n 1 | tr -d 'v')" >> $GITHUB_ENV
       - name: check current diff
         run: |
-          echo CURRENT: env.SOURCE_VERSION
-          echo TARGET: env.TARGET_VERSION
-          test "env.TARGET_VERSION" != ""
-          if [[ env.SOURCE_VERSION} != env.TARGET_VERSION ]]; then
-            echo "UNMATCH_VERSION='true' >> $GITHUB_ENV
+          echo CURRENT: ${SOURCE_VERSION}
+          echo TARGET: ${TARGET_VERSION}
+          test "${TARGET_VERSION}" != ""
+          if [[ ${SOURCE_VERSION} != ${TARGET_VERSION} ]]; then
+            echo "UNMATCH_VERSION='true'" >> $GITHUB_ENV
           fi
       - name: update minikube quarkus version
         if: env.UNMATCH_VERSION == 'true'
