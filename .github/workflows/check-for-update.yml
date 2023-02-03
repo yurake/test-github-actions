@@ -33,12 +33,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          branch: "check-for-update"
+          branch: "actions/check-for-update-minikube"
           sha: "${{ github.event.pull_request.head.sha }}"
       - name: update minikube quarkus version
         if: env.UNMATCH_VERSION == 'true'
         working-directory: ./.github/workflows
         run: |
+          git switch -c actions/check-for-update-minikube
           sed -i -e "s/$SOURCE_VERSION/$TARGET_VERSION/g" minikube-quarkus-ci.yml
           echo "SOURCE_VERSION_UPDATED=$(grep "minikube-version" minikube-quarkus-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
       - name: check updated diff
@@ -49,8 +50,9 @@ jobs:
           echo TARGET: ${TARGET_VERSION}
           test ${SOURCE_VERSION_UPDATED} = ${TARGET_VERSION}
 
-      - name: git
-        run: git status
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply actions/check-for-update-minikube
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
