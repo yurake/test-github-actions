@@ -30,9 +30,6 @@ jobs:
           if [[ ${SOURCE_VERSION} != ${TARGET_VERSION} ]]; then
             sed -i -e "s/$SOURCE_VERSION/$TARGET_VERSION/g" minikube-quarkus-ci.yml
             echo "SOURCE_VERSION_UPDATED=$(grep "minikube-version" minikube-quarkus-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
-            echo CURRENT_UPDATED: ${SOURCE_VERSION_UPDATED}
-            echo TARGET: ${TARGET_VERSION}
-            test ${SOURCE_VERSION_UPDATED} = ${TARGET_VERSION}
           fi
       - name: check diff
         working-directory: ./.github/workflows
