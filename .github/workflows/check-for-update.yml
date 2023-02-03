@@ -28,6 +28,11 @@ jobs:
             echo "UNMATCH_VERSION=true" >> $GITHUB_ENV
             echo "Unmatched."
           fi
+      - name: check UNMATCH_VERSION
+        working-directory: ./.github/workflows
+        run: |
+          echo UNMATCH_VERSION: ${UNMATCH_VERSION}
+
       - name: update minikube quarkus version
         if: env.UNMATCH_VERSION == true
         working-directory: ./.github/workflows
@@ -35,14 +40,12 @@ jobs:
           sed -i -e "s/$SOURCE_VERSION/$TARGET_VERSION/g" minikube-quarkus-ci.yml
           echo "SOURCE_VERSION_UPDATED=$(grep "minikube-version" minikube-quarkus-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
       - name: check updated diff
+        if: env.UNMATCH_VERSION == true
         working-directory: ./.github/workflows
         run: |
-          if [[ ${SOURCE_VERSION} != ${TARGET_VERSION} ]]; then
-            echo UNMATCH_VERSION: ${UNMATCH_VERSION}
-            echo CURRENT_UPDATED: ${SOURCE_VERSION_UPDATED}
-            echo TARGET: ${TARGET_VERSION}
-            test ${SOURCE_VERSION_UPDATED} = ${TARGET_VERSION}
-          fi
+          echo CURRENT_UPDATED: ${SOURCE_VERSION_UPDATED}
+          echo TARGET: ${TARGET_VERSION}
+          test ${SOURCE_VERSION_UPDATED} = ${TARGET_VERSION}
 
       - name: check current minikube yaml version
         working-directory: ./.github/workflows
