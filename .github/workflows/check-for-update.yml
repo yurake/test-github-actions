@@ -49,7 +49,7 @@ jobs:
           echo TARGET: ${TARGET_VERSION}
           test ${SOURCE_VERSION_UPDATED} = ${TARGET_VERSION}
 
-      - name: Create Pull Request
+      - name: git
         run: git status
 
       - name: Create Pull Request
