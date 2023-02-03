@@ -25,11 +25,11 @@ jobs:
           echo TARGET: ${TARGET_VERSION}
           test "${TARGET_VERSION}" != ""
           if [[ ${SOURCE_VERSION} != ${TARGET_VERSION} ]]; then
-            echo "UNMATCH_VERSION='true'" >> $GITHUB_ENV
+            echo "UNMATCH_VERSION=true" >> $GITHUB_ENV
             echo "Unmatched."
           fi
       - name: update minikube quarkus version
-        if: env.UNMATCH_VERSION == 'true'
+        if: env.UNMATCH_VERSION == true
         working-directory: ./.github/workflows
         run: |
           sed -i -e "s/$SOURCE_VERSION/$TARGET_VERSION/g" minikube-quarkus-ci.yml
