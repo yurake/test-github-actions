@@ -1,0 +1,102 @@
+name: Check for Update
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  minikube-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2.3.4
+        with:
+          repository: yurake/k8s-3tier-webapp
+      - name: check current minikube quarkus version
+        working-directory: ./.github/workflows
+        run: echo "SOURCE_VERSION=$(grep "minikube-version" minikube-quarkus-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
+      - name: check latest tag minikube version
+        run: echo "TARGET_VERSION=$(curl -s https://api.github.com/repos/kubernetes/minikube/releases | jq -r '.[].tag_name' | grep -v '-' | sort -t'.' -k2,2n | tail -n 1 | tr -d 'v')" >> $GITHUB_ENV
+      - name: check diff minikube
+        run: |
+          echo CURRENT: ${SOURCE_VERSION}
+          echo TARGET: ${TARGET_VERSION}
+          test ${SOURCE_VERSION} = ${TARGET_VERSION}
+      - name: check current minikube yaml version
+        working-directory: ./.github/workflows
+        run: echo "SOURCE_VERSION=$(grep "minikube-version" minikube-yaml-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
+      - name: check diff yaml
+        run: |
+          echo CURRENT: ${SOURCE_VERSION}
+          echo TARGET: ${TARGET_VERSION}
+          test ${SOURCE_VERSION} = ${TARGET_VERSION}
+      - name: check current minikube stress version
+        working-directory: ./.github/workflows
+        run: echo "SOURCE_VERSION=$(grep "minikube-version" minikube-stress-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
+      - name: check diff stress
+        run: |
+          echo CURRENT: ${SOURCE_VERSION}
+          echo TARGET: ${TARGET_VERSION}
+          test ${SOURCE_VERSION} = ${TARGET_VERSION}
+      - name: check current minikube security version
+        working-directory: ./.github/workflows
+        run: echo "SOURCE_VERSION=$(grep "minikube-version" minikube-security-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
+      - name: check diff security
+        run: |
+          echo CURRENT: ${SOURCE_VERSION}
+          echo TARGET: ${TARGET_VERSION}
+          test ${SOURCE_VERSION} = ${TARGET_VERSION}
+  kubernetes-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.3.0
+      - name: check current kubernetes quarkus version
+        working-directory: ./.github/workflows
+        run: echo "SOURCE_VERSION=$(grep "k8s-version" minikube-quarkus-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
+      - name: check latest tag kubernetes version
+        run: echo "TARGET_VERSION=$(curl -s https://api.github.com/repos/kubernetes/kubernetes/releases | jq -r '.[].tag_name' | grep -v '-' | sort -t'.' -k2,2n | tail -n 1 | tr -d 'v')" >> $GITHUB_ENV
+      - name: check diff kubernetes
+        run: |
+          echo CURRENT: ${SOURCE_VERSION}
+          echo TARGET: ${TARGET_VERSION}
+          test ${SOURCE_VERSION} = ${TARGET_VERSION}
+      - name: check current minikube yaml version
+        working-directory: ./.github/workflows
+        run: echo "SOURCE_VERSION=$(grep "k8s-version" minikube-yaml-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
+      - name: check diff yaml
+        run: |
+          echo CURRENT: ${SOURCE_VERSION}
+          echo TARGET: ${TARGET_VERSION}
+          test ${SOURCE_VERSION} = ${TARGET_VERSION}
+      - name: check current minikube stress version
+        working-directory: ./.github/workflows
+        run: echo "SOURCE_VERSION=$(grep "k8s-version" minikube-stress-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
+      - name: check diff stress
+        run: |
+          echo CURRENT: ${SOURCE_VERSION}
+          echo TARGET: ${TARGET_VERSION}
+          test ${SOURCE_VERSION} = ${TARGET_VERSION}
+      - name: check current minikube security version
+        working-directory: ./.github/workflows
+        run: echo "SOURCE_VERSION=$(grep "k8s-version" minikube-security-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
+      - name: check diff security
+        run: |
+          echo CURRENT: ${SOURCE_VERSION}
+          echo TARGET: ${TARGET_VERSION}
+          test ${SOURCE_VERSION} = ${TARGET_VERSION}
+  chaos-mesh-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.3.0
+      - name: check current chaos mesh version
+        working-directory: ./.github/workflows
+        run: echo "SOURCE_VERSION=$(grep CHAOS_MESH_VERSION kind-chaos-mesh-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
+      - name: check latest tag chaos mesh version
+        run: echo "TARGET_VERSION=$(curl -s https://api.github.com/repos/chaos-mesh/chaos-mesh/releases | jq -r '.[].tag_name' | grep -v '-' | sort -t'.' -k2,2n | tail -n 1 | tr -d 'v')" >> $GITHUB_ENV
+      - name: check diff chaos mesh
+        run: |
+          echo CURRENT: ${SOURCE_VERSION}
+          echo TARGET: ${TARGET_VERSION}
+          test ${SOURCE_VERSION} = ${TARGET_VERSION}
