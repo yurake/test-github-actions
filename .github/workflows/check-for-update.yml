@@ -34,13 +34,13 @@ jobs:
           echo UNMATCH_VERSION: ${UNMATCH_VERSION}
 
       - name: update minikube quarkus version
-        if: env.UNMATCH_VERSION == true
+        if: env.UNMATCH_VERSION == 'true'
         working-directory: ./.github/workflows
         run: |
           sed -i -e "s/$SOURCE_VERSION/$TARGET_VERSION/g" minikube-quarkus-ci.yml
           echo "SOURCE_VERSION_UPDATED=$(grep "minikube-version" minikube-quarkus-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
       - name: check updated diff
-        if: env.UNMATCH_VERSION == true
+        if: env.UNMATCH_VERSION == 'true'
         working-directory: ./.github/workflows
         run: |
           echo CURRENT_UPDATED: ${SOURCE_VERSION_UPDATED}
