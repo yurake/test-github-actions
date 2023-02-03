@@ -25,7 +25,7 @@ jobs:
           echo TARGET: ${TARGET_VERSION}
           # test ${SOURCE_VERSION} = ${TARGET_VERSION}
       - name: update current minikube quarkus version
-        run: sed -e "s/$SOURCE_VERSION/$TARGET_VERSION/g" minikube-ci.yml
+        run: sed -e "s/$SOURCE_VERSION/$TARGET_VERSION/g" minikube-quarkus-ci.yml
       - name: check updated minikube quarkus version
         working-directory: ./.github/workflows
         run: echo "SOURCE_VERSION_UPDATED=$(grep "minikube-version" minikube-quarkus-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
