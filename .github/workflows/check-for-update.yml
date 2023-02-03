@@ -19,6 +19,8 @@ jobs:
         run: |
           echo "SOURCE_VERSION=$(grep "minikube-version" minikube-quarkus-ci.yml | awk '{print $2}')" >> $GITHUB_ENV
           echo "TARGET_VERSION=$(curl -s https://api.github.com/repos/kubernetes/minikube/releases | jq -r '.[].tag_name' | grep -v '-' | sort -t'.' -k2,2n | tail -n 1 | tr -d 'v')" >> $GITHUB_ENV
+      - name: check diff
+        run: |
           echo CURRENT: ${SOURCE_VERSION}
           echo TARGET: ${TARGET_VERSION}
           test "${TARGET_VERSION}" != ""
