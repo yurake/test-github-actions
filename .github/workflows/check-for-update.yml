@@ -28,7 +28,7 @@ jobs:
             echo "UNMATCH_VERSION='true' >> $GITHUB_ENV
           fi
       - name: update minikube quarkus version
-        if: ${UNMATCH_VERSION}
+        if: ${UNMATCH_VERSION} == 'true'
         working-directory: ./.github/workflows
         run: |
           sed -i -e "s/$SOURCE_VERSION/$TARGET_VERSION/g" minikube-quarkus-ci.yml
