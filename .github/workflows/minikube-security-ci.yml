@@ -82,7 +82,7 @@ jobs:
           curl -v http://k8s.3tier.webapp/
       - name: ZAP Scan
         if: always()
-        uses: zaproxy/action-baseline@v0.6.1
+        uses: zaproxy/action-baseline@v0.7.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: "http://k8s.3tier.webapp/"
