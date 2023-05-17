@@ -26,7 +26,7 @@ jobs:
         with:
           repository: yurake/k8s-3tier-webapp
       - name: Kind Cluster
-        uses: helm/kind-action@v1.6.0
+        uses: helm/kind-action@v1.7.0
       - name: kind delete cluster
         run: |
           kind delete cluster
