@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.6.0
+      - uses: actions/checkout@v4.1.1
       - name: lint mysql
         uses: brpaz/hadolint-action@v1.5.0
         with:
