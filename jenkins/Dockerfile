@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.293-alpine
+FROM jenkins/jenkins:2.451-alpine
 ARG BUILD_DATE
 ARG VCS_REF
 # renovate: datasource=repology depName=alpine_3_12/tzdata versioning=loose
