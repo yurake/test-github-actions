@@ -50,7 +50,7 @@ jobs:
           echo TARGET: ${TARGET_VERSION}
           test ${SOURCE_VERSION_UPDATED} = ${TARGET_VERSION}
 
-      - uses: stefanzweifel/git-auto-commit-action@v4.16.0
+      - uses: stefanzweifel/git-auto-commit-action@v5.0.1
         with:
           commit_message: Apply actions/check-for-update-minikube
 
