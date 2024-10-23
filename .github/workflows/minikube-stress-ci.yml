@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
     steps:
       - name: checkout
-        uses: actions/checkout@v2.6.0
+        uses: actions/checkout@v4.2.2
         with:
           repository: yurake/k8s-3tier-webapp
       - name: setup minikube
